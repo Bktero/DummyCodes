@@ -27,7 +27,8 @@ class Browser(QtGui.QMainWindow):
         # Creation du timer
         self.timer = QtCore.QTimer();
         self.timer.timeout.connect(self.switchTab)
-        self.timer.start(3000);
+        self.timerInterval = 3000
+        self.timer.start( self.timerInterval )
         
         # Barre de menus
         # Menu "application"
@@ -35,7 +36,7 @@ class Browser(QtGui.QMainWindow):
         
         self.actionQuit = QtGui.QAction("&Quitter", self)
         self.actionQuit.triggered.connect(QtGui.qApp.quit) # reference magique a l'application en cours
-        menuApp.k(self.actionQuit);
+        menuApp.addAction(self.actionQuit);
         
         # Menu "tabs"
         menuTabs = self.menuBar().addMenu("&Onglets");
@@ -58,13 +59,23 @@ class Browser(QtGui.QMainWindow):
         self.actionRestart = QtGui.QAction("&Relancer", self)
         self.actionRestart.triggered.connect(self.restartTimer)
         menuTimer.addAction(self.actionRestart);
-             
         
+        self.actionChangeTimerInterval = QtGui.QAction("&Periodicite", self)
+        self.actionChangeTimerInterval.triggered.connect(self.changeTimerInterval)
+        menuTimer.addAction(self.actionChangeTimerInterval);        
+             
+    def changeTimerInterval(self):
+        results = QtGui.QInputDialog.getInt(self, "Periodicite du timer", "Periode", self.timerInterval, 1, 2147483647, 100)
+        
+        if results[1] == True:
+            self.timerInterval = int( results[0] )
+            self.timer.setInterval( self.timerInterval )
+    
     def stopTimer(self):
-        self.timer.stop()
 
+        self.timer.stop()
     def restartTimer(self):
-        self.timer.start(3000)
+        self.timer.start( self.timerInterval )
         
     def switchTab(self):
         newindex = self.tabs.currentIndex() + 1
@@ -76,6 +87,12 @@ class Browser(QtGui.QMainWindow):
     def addTab(self):
         resultsUrl = QtGui.QInputDialog.getText(self, "Entrer l'URL souhaitee", "URL")
         resultsTitle = QtGui.QInputDialog.getText(self, "Entrer le titre de l'onglet", "Titre")
+        
+        '''
+        Voir comment faire une gestion des URL invalides plus robutes avec :
+        http://www.riverbankcomputing.co.uk/static/Docs/PyQt4/html/qnetworkaccessmanager.html
+        http://www.riverbankcomputing.co.uk/static/Docs/PyQt4/html/qnetworkreply.html#NetworkError-enum
+       '''
        
         if (resultsUrl[1] == True) & (resultsTitle[1] == True):
             page = QtWebKit.QWebView()
@@ -94,6 +111,9 @@ class Browser(QtGui.QMainWindow):
     
 if __name__=='__main__':
     app = QtGui.QApplication(sys.argv)
+    
     nav = Browser()
+    nav.setWindowTitle("Monitoring")
     nav.main()
-    app.exec_()
+    
+    sys.exit( app.exec_() )

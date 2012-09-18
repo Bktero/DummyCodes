@@ -120,3 +120,75 @@ int main2(void)
 
     return 0;
 }
+
+
+/* 
+// Autre exemple avec une fonction, issu de la converstion
+// http://www.developpez.net/forums/d1254135/c-cpp/c/debuter/copie-tableau-fichier/
+
+
+#include <stdlib.h>
+#include <stdio.h>
+
+int copie_originale(int **tab , size_t col, size_t row)
+{
+    size_t i, j;
+
+    for(i=0 ; i<row ; i++)
+    {
+        for (j=0 ; j<col ; j++)
+        {
+            printf("%d\t", tab[i][j]);
+        }
+        printf("\n");
+    }
+    return 0;
+}
+
+int copie_alternative(int (*tab)[] , size_t col, size_t row)
+{
+    size_t i, j;
+    for(i=0 ; i<row ; i++)
+    {
+        for (j=0 ; j<col ; j++)
+        {
+            printf("%d\t", (*tab+i*col)[j]);
+        }
+        printf("\n");
+    }
+    return 0;
+}
+
+int main(void)
+{
+    int tabtab[4][5] = { {15, 1, 12, 8, 56}, {1, 1, 2, 8, 6}, {515, 31, 142, 28, 526}, {135, 21, 132, 833, 563} };
+
+    int * tabpt[5];
+    tabpt[0] = (int*) tabtab[0]; // j'explicite le cast implicite
+    tabpt[1] = tabtab[1];
+    tabpt[2] = tabtab[2];
+    tabpt[3] = tabtab[3];
+    tabpt[4] = tabtab[4];
+
+    puts("copie_originale OK : ");
+    copie_originale(tabpt, 5, 4);
+
+    puts("\ncopie_alternative OK : ");
+    copie_alternative(tabtab, 5, 4);
+
+    puts("copie_originale KO ! : ");
+    //copie_originale(tabtab, 5, 4); // warning pour des types incompatibles
+                                    // plante le programme
+
+    puts("\ncopie_alternative KO ! : ");
+    copie_alternative(tabpt, 5, 4); // warning idem , affiche n'importe quoi
+
+    char monChar = '0';
+    printf("%d", monChar - '0');
+    monChar = '1';
+    printf("%d", monChar - '0');
+
+    return 0;
+}
+
+*/
